@@ -6,9 +6,17 @@ def open_source_text(filename):
         source_text = infile.read()
     return source_text
 
+def clean_source(source):
+    source = source.replace("_","")
+    source = source.replace(",","")
+    source = source.replace("--"," -- ")
+    source = source.replace(";","")
+    source = source.replace("\n"," ")
+    return source
+
 def build_markov_chain(source, order=1):
     markov = {}
-    source = source.replace("\n"," ")
+    source = clean_source(source)
     sourcelist = source.split()
     
     for i in range(0,len(sourcelist)-order):
