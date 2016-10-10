@@ -9,10 +9,18 @@ def open_source_text(filename):
 
 def clean_source(source):
     source = source.replace("_","")
-    source = source.replace(",","")
+    source = source.replace("."," . ")
+    source = source.replace(","," , ")
     source = source.replace("--"," -- ")
-    source = source.replace(";","")
+    source = source.replace(";"," ; ")
     source = source.replace("\n"," ")
+
+    wordset = set(source.split())
+    for word in wordset:
+        if not word.lower() in wordset:
+            pass
+        else:
+            source = source.replace(word,word.lower())
     return source
 
 def build_markov_chain(source, order=1):
@@ -34,18 +42,19 @@ def generate_text(markovchain,length):
     current_state = random.choice(list(markovchain.keys()))
 
     while len(text) < length:
-        print("Current state:",current_state)
         next_word = random.choice(markovchain[current_state])
-        print("next_word:",next_word)
         current_state = current_state[1:] + tuple([next_word])
         text.append(next_word)
 
     return text
 
 def main():
-    source = open_source_text("../texts/pride-and-prejudice-full-text")
-    mkv = build_markov_chain(source,5)
-    text = generate_text(mkv,1000)
+    source = open_source_text("../texts/pride-and-prejudice")
+    source2 = open_source_text("../texts/emma")
+    source3 = open_source_text("../texts/sense-and-sensibility")
+    source = source + source2 + source3
+    mkv = build_markov_chain(source,4)
+    text = generate_text(mkv,300)
     return text
 
 if __name__ == "__main__":
